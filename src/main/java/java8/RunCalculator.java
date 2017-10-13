@@ -17,9 +17,9 @@ public class RunCalculator {
 		System.out.println(calculator.execute((a, b) -> a - b));
 		
 		System.out.println(calculator.execute((a, b) -> a * b));
-		calculator.doSomething((a) -> {});
-		calculator.doSomething((a) -> System.out.println(a));
-		calculator.doSomething((a) -> {double x = a * a;});
+		calculator.doSomething(a -> {});
+		calculator.doSomething(a -> System.out.println(a));
+		calculator.doSomething(a -> {double x = a * a;});
 		
 		final double[] result = {0};
 		
