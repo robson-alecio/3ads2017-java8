@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -14,7 +15,7 @@ import parte2.Personagem;
 
 public class RunStreams {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Throwable {
 		ArrayList<Personagem> personagens = new ArrayList<>();
 		personagens.add(new Personagem("Jason Born", 45, "Humano"));
 		personagens.add(new Personagem("Hulk", 1450, "Super-Humano"));
@@ -66,7 +67,7 @@ public class RunStreams {
 		List<Personagem> copia1 = new ArrayList<Personagem>(personagens);
 //		copia1.sort(Comparator.comparing(Personagem::getNome));
 //		copia1.sort(Comparator.comparingInt(Personagem::getForca).thenComparing(Personagem::getNome));
-		copia1.sort(Comparator.comparing(Personagem::getNome).thenComparingInt(Personagem::getForca));
+		copia1.sort(Comparator.comparing(Personagem::getNome).reversed().thenComparingInt(Personagem::getForca));
 		Map<String, List<Personagem>> personagensPorRaca = copia1.stream()
 				.collect(Collectors.groupingBy(Personagem::getRaca));
 		System.out.println(personagensPorRaca);
@@ -88,6 +89,24 @@ public class RunStreams {
 			personagens1.forEach(p -> System.out.printf("-> %s -> %d\n", p.getNome(), p.getForca()));
 		});
 		
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+		List<Personagem> copia2 = new ArrayList<Personagem>(personagens);
+		copia2.sort(Comparator.comparingInt(Personagem::getForca));
+		Stream<Personagem> filtered = copia2.stream().filter(p -> p.getForca() >= 1_000 );
+		Optional<Personagem> optional = filtered.findFirst();
+//		Personagem personagemComCerteza = optional.orElse(new Personagem("Zé Ninguém", 0, "desconhecida"));
+//		Personagem personagemComCerteza = optional.orElseThrow(() -> new RuntimeException("Deu ruim!!!"));
+		optional.ifPresent(p -> System.out.println(p));
+//		System.out.println(personagemComCerteza);
+		criarPersonagem("Ranger Vermelho", 140, "Humano").ifPresent(p -> copia2.add(p));
+		copia2.forEach(p -> System.out.println(p));
+	}
+
+	private static Optional<Personagem> criarPersonagem(String nome, int forca, String raca) {
+		if (nome == null || nome.isEmpty() || forca <= 0 || raca == null || raca.isEmpty())
+			return Optional.empty();
+		
+		return Optional.of(new Personagem(nome, forca, raca));
 	}
 
 }
