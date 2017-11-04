@@ -1,7 +1,10 @@
 package parte3;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,6 +24,8 @@ public class RunStreams {
 		personagens.add(new Personagem("Thor", 1050, "Asgardiano"));
 		personagens.add(new Personagem("Riuk", 500, "Shinigami"));
 		personagens.add(new Personagem("Rem", 500, "Shinigami"));
+		personagens.add(new Personagem("Sobo", 400, "Shinigami"));
+		personagens.add(new Personagem("Sobo", 300, "Shinigami"));
 		personagens.add(new Personagem("Loki", 600, "Asgardiano"));
 		personagens.add(new Personagem("Felipe", 15, "Asgardiano"));
 		personagens.add(new Personagem("Zod", 1300, "Criptoniano"));
@@ -51,6 +56,38 @@ public class RunStreams {
 			.collect(Collectors.toList());
 		
 		antiPersonagens.forEach(p -> System.out.println(p.getNome()));
+
+		List<Personagem> personagensBombados = personagens.stream()
+				.map(origem -> new Personagem(origem.getNome(), origem.getForca() * 2, origem.getRaca()))
+				.collect(Collectors.toList());
+		personagensBombados.forEach(p -> System.out.printf("%s -> %d\n", p.getNome(), p.getForca()));
+		
+		System.out.println("=====================================");
+		List<Personagem> copia1 = new ArrayList<Personagem>(personagens);
+//		copia1.sort(Comparator.comparing(Personagem::getNome));
+//		copia1.sort(Comparator.comparingInt(Personagem::getForca).thenComparing(Personagem::getNome));
+		copia1.sort(Comparator.comparing(Personagem::getNome).thenComparingInt(Personagem::getForca));
+		Map<String, List<Personagem>> personagensPorRaca = copia1.stream()
+				.collect(Collectors.groupingBy(Personagem::getRaca));
+		System.out.println(personagensPorRaca);
+		
+		System.out.println("**************************************");
+		personagensPorRaca.forEach(new BiConsumer<String, List<Personagem>>() {
+			@Override
+			public void accept(String raca, List<Personagem> personagens) {
+				System.out.println("=====================================");
+				System.out.printf("Raça: %s\n", raca);
+				personagens.forEach(p -> System.out.printf("-> %s -> %d\n", p.getNome(), p.getForca()));
+			}
+		});
+		
+		System.out.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+		personagensPorRaca.forEach((raca, personagens1) -> {
+			System.out.println("=====================================");
+			System.out.printf("Raça: %s\n", raca);
+			personagens1.forEach(p -> System.out.printf("-> %s -> %d\n", p.getNome(), p.getForca()));
+		});
+		
 	}
 
 }

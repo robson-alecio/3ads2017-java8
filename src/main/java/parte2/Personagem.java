@@ -24,5 +24,11 @@ public class Personagem {
 	public String getRaca() {
 		return raca;
 	}
+
+	@Override
+	public String toString() {
+		return "Personagem [nome=" + nome + ", forca=" + forca + ", raca="
+				+ raca + "]";
+	}
 	
 }
