@@ -9,6 +9,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import parte2.Personagem;
@@ -100,6 +101,8 @@ public class RunStreams {
 //		System.out.println(personagemComCerteza);
 		criarPersonagem("Ranger Vermelho", 140, "Humano").ifPresent(p -> copia2.add(p));
 		copia2.forEach(p -> System.out.println(p));
+		
+		IntStream.rangeClosed(1, 100).forEach(i -> System.out.println(i));
 	}
 
 	private static Optional<Personagem> criarPersonagem(String nome, int forca, String raca) {
